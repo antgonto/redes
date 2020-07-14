@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <link rel="stylesheet" href="styles.css">
+    <meta name="google-signin-client_id" content="342126393683-ffbhei12bpi348t5d75io0tcvhmbeufn.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+
+<body>
+  <!-- ////// FACEBOOK btn ////// -->
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v7.0&appId=748098295932419" nonce="Hoj7lROG"></script>
+
+<script>
+////// FACEBOOK API JavaScript //////
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '748098295932419',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v7.0'
+    });
+
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+   function statusChangeCallback(response){
+     if(response.status === 'connected'){
+       console.log('Logged in and authenticated');
+       setElements(true);
+       testAPI();
+     } else {
+       console.log('Not authenticated');
+       setElements(false);
+     }
+   }
+
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+  function testAPI(){
+    FB.api('/me?fields=name,email,birthday,location', function(response){
+      if(response && !response.error){
+        //console.log(response);
+        buildProfile(response);
+      };
+    })
+  }
+
+  function buildProfile(user){
+    let profile = `
+      <h3>${user.name}</h3>
+      <ul class="list-group">
+        <li class="list-group-item">User ID: ${user.id}</li>
+        <li class="list-group-item">Email: ${user.email}</li>
+        <li class="list-group-item">Birthday: ${user.birthday}</li>
+        <li class="list-group-item">Location: ${user.location.name}</li>
+      </ul>
+    `;
+
+    document.getElementById('profile').innerHTML = profile;
+  }
+
+  function setElements(isLoggedIn){
+    if(isLoggedIn){
+      document.getElementById('fb-btn').style.display = 'none';
+      document.getElementById('logout').style.display = 'block';
+      document.getElementById('profile').style.display = 'block';
+      document.getElementById('heading').style.display = 'none';
+    } else {
+      document.getElementById('fb-btn').style.display = 'block';
+      document.getElementById('logout').style.display = 'none';
+      document.getElementById('profile').style.display = 'none';
+      document.getElementById('heading').style.display = 'block';
+    }
+  }
+
+  function logout(){
+    FB.logout(function(response){
+      console.log('Facebook User signed out')
+      setElements(false);
+    });
+
+    gapi.auth2.getAuthInstance().signOut().then(function() {
+    console.log('Google User signed out')
+    setElements(false);
+  })
+
+  }
+
+////// GOOGLE API JavaScript //////
+
+function onSignIn(googleUser) {
+      // get user profile information
+      console.log(googleUser.getBasicProfile())
+      buildGProfile(googleUser);
+      setElements(true);
+    }
+
+function buildGProfile(googleUser) {
+  let profile = `
+      <h3>${googleUser.getBasicProfile().getName()}</h3>
+      <ul class="list-group">
+        <li class="list-group-item">User ID: ${googleUser.getBasicProfile().getId()}</li>
+        <li class="list-group-item">Email: ${googleUser.getBasicProfile().getEmail()}</li>
+        <li class="list-group-item">Birthday: ${googleUser.getBasicProfile().getName()}</li>
+        <li class="list-group-item">Location: ${googleUser.getBasicProfile().getName()}</li>
+      </ul>
+    `;
+
+    document.getElementById('profile').innerHTML = profile;
+  }
+
+</script>
+
+
+  <!-- ////// PAGE DISPLAY ////// -->
+
+
+    <div class="container-fluid">
+        <div class="row no-gutter">
+          <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image">
+
+            <div class="container" style="text-align: center; margin: auto;">
+              <h3 id="heading">Log in to retrieve profile data.</h3>
+              <div id="profile"></div>
+              <button id="logout" onclick="logout()" class="btn btn-secondary btn-block mb-2 text-uppercase">Logout</button>
+            </div>
+
+          </div>
+          <div class="col-md-8 col-lg-6">
+            <div class="login d-flex align-items-center py-5">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-9 col-lg-8 mx-auto">
+                      
+                    <h3 class="login-heading mb-4">App Login</h3>
+                    <form>
+                      <div class="form-label-group">
+                        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                        <label for="inputEmail">Email address</label>
+                      </div>
+      
+                      <div class="form-label-group">
+                        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                        <label for="inputPassword">Password</label>
+                      </div>
+      
+                      <div class="custom-control custom-checkbox mb-3">
+                        <input type="checkbox" class="custom-control-input" id="customCheck1">
+                        <label class="custom-control-label" for="customCheck1">Remember password</label>
+                      </div>
+                      <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">Sign in</button>
+                    </form>
+
+                      <button class="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">Register</button>
+                      <div class="text-center">
+                      <a class="small" href="#">Forgot password?</a></div>
+
+                    <hr class="my-4">
+                    <button class="btn btn-block mb-2 btn-google text-uppercase" type="submit"><i class="fab fa-google mr-2"></i> Sign in with Google</button>
+                    <button class="btn btn-primary btn-block mb-2 btn-facebook text-uppercase" type="submit"><i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
+
+                    <h4>Test btns</h4>
+                    <div id="fb-btn" onlogin="checkLoginState();" class="fb-login-button" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" data-width=""
+                    id="fb-btn"scope="public_profile,email,user_birthday,user_location"></div>
+                    <br>
+                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                
+
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+</body>
+
+</html>
+
