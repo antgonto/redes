@@ -13,7 +13,7 @@ Estos son los modulos que se deben de instalar
 En la terminal se ejecuta el siguiente codigo para la instalación:
 - npm install passport passport-twitter express-session --save
 
-Si presenta errores de faltaq de modulos simplemente instalarlos.
+Si presenta errores de falta de modulos simplemente instalarlos.
 - serve-favicon
 - cookie-parser
 - morgan
