@@ -1,9 +1,9 @@
 Para el uso de este proyecto se debe crear una app en la plataforma de Twitter Developer. https://developer.twitter.com/en
 Por medio de esta pagina se consiguen los siguientes componentes:
--consumerKey:
+-consumerKey
 -consumerSecret
 
-Y además se debe autorizar la autenticación de terceros. 
+Y además se debe autorizar la autenticación de terceros para el funconamiento. 
 
 Estos son los modulos que se deben de instalar
 -Passport
